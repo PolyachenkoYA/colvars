@@ -229,8 +229,8 @@ protected:
   std::vector<int> reflection_llimit_cv;
   std::vector<int> reflection_ulimit_cv;
   cvm::real reflection_int;
-  size_t nrefvarsl;
-  size_t nrefvarsu;
+  int nrefvarsl;
+  int nrefvarsu;
 
   /// \brief Limits for reflection 
   std::vector<cvm::real> reflection_llimit;
@@ -255,8 +255,8 @@ protected:
 
   std::vector<int> which_int_llimit_cv;
   std::vector<int> which_int_ulimit_cv;
-  size_t nintvarsl;
-  size_t nintvarsu;
+  int nintvarsl;
+  int nintvarsu;
   /// \brief Limits for interval 
   std::vector<cvm::real> interval_llimit;
   std::vector<cvm::real> interval_ulimit;
