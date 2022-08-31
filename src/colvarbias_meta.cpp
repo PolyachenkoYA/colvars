@@ -339,6 +339,7 @@ int colvarbias_meta::init_reflection_params(std::string const &conf)
   nrefvarsl=0;
   nrefvarsu=0;
   reflection_type = rt_none;
+  int nvars=num_variables();
   get_keyval(conf, "useHillsReflection", use_reflection, false);
   if (use_reflection) {
 
@@ -352,8 +353,8 @@ int colvarbias_meta::init_reflection_params(std::string const &conf)
       reflection_type = rt_multid;
     }
 
-    get_keyval(conf, "reflectionLowLimitNCVs", nrefvarsl, num_variables());
-    get_keyval(conf, "reflectionUpLimitNCVs", nrefvarsu, num_variables());
+    get_keyval(conf, "reflectionLowLimitNCVs", nrefvarsl, nvars);
+    get_keyval(conf, "reflectionUpLimitNCVs", nrefvarsu, nvars);
     if (reflection_llimit_cv.size()==0) {
       reflection_llimit_cv.resize(nrefvarsl);
       for (int i = 0; i < nrefvarsl; i++) {
@@ -430,7 +431,7 @@ int colvarbias_meta::init_reflection_params(std::string const &conf)
   // use reflection only with scalar variables
 
   for (int i = 0; i < nrefvarsl; i++) {
-     if (reflection_llimit_cv[i]>=num_variables() || reflection_llimit_cv[i]<0) {
+     if (reflection_llimit_cv[i]>=nvars || reflection_llimit_cv[i]<0) {
        cvm::error("Error: CV number is negative or >= num_variables  \n", COLVARS_INPUT_ERROR);
        return COLVARS_INPUT_ERROR;
      }
@@ -442,7 +443,7 @@ int colvarbias_meta::init_reflection_params(std::string const &conf)
   }
 
   for (int i = 0; i < nrefvarsu; i++) {
-     if (reflection_ulimit_cv[i]>=num_variables() || reflection_ulimit_cv[i]<0) {
+     if (reflection_ulimit_cv[i]>=nvars || reflection_ulimit_cv[i]<0) {
        cvm::error("Error: CV number is negative or >= num_variables  \n", COLVARS_INPUT_ERROR);
        return COLVARS_INPUT_ERROR;
      }
@@ -465,7 +466,6 @@ int colvarbias_meta::init_reflection_params(std::string const &conf)
     cvm::log("Using multidimensional reflection \n");
     int sum=1;
     int nstates;
-    int nvars=num_variables();
     if (reflection_usel.size()==0) {
       reflection_usel.resize(nvars,std::vector<bool>(2));
     }
@@ -527,7 +527,7 @@ int colvarbias_meta::init_reflection_params(std::string const &conf)
       ref_state[j][0]=sum;
       int count=0;
       for (int jj = 0; jj < j; jj++) {
-         for (int ii = 0; ii < ref_state[jj].size(); ii++) {
+         for (size_t ii = 0; ii < ref_state[jj].size(); ii++) {
             count++;
             ref_state[j][count]=ref_state[j][0]+ref_state[jj][ii];
          }
@@ -548,10 +548,11 @@ int colvarbias_meta::init_interval_params(std::string const &conf)
   nintvarsu=0;
   std::vector<int> interval_llimit_cv;
   std::vector<int> interval_ulimit_cv;
+  int nvars=num_variables();
   if (get_keyval(conf, "useHillsInterval", use_interval, use_interval)) {
     if (use_interval) {
-      get_keyval(conf, "intervalLowLimitNCVs", nintvarsl, num_variables());
-      get_keyval(conf, "intervalUpLimitNCVs", nintvarsu, num_variables());
+      get_keyval(conf, "intervalLowLimitNCVs", nintvarsl, nvars);
+      get_keyval(conf, "intervalUpLimitNCVs", nintvarsu, nvars);
       interval_llimit_cv.resize(nintvarsl);
       for (int i = 0; i < nintvarsl; i++) {
          interval_llimit_cv[i]=i;
@@ -624,9 +625,9 @@ int colvarbias_meta::init_interval_params(std::string const &conf)
   }
 
   if (which_int_llimit_cv.size()==0) {
-    which_int_llimit_cv.resize(num_variables());
+    which_int_llimit_cv.resize(nvars);
   }
-  for (size_t i = 0; i < num_variables(); i++) {
+  for (int i = 0; i < nvars; i++) {
      which_int_llimit_cv[i]=-1;
   }
   for (int i = 0; i < nintvarsl; i++) {
@@ -635,9 +636,9 @@ int colvarbias_meta::init_interval_params(std::string const &conf)
   }
 
   if (which_int_ulimit_cv.size()==0) {
-    which_int_ulimit_cv.resize(num_variables());
+    which_int_ulimit_cv.resize(nvars);
   }
-  for (size_t i = 0; i < num_variables(); i++) {
+  for (int i = 0; i < nvars; i++) {
      which_int_ulimit_cv[i]=-1;
   }
   for (int i = 0; i < nintvarsu; i++) {
@@ -647,7 +648,7 @@ int colvarbias_meta::init_interval_params(std::string const &conf)
   // use interval only with scalar variables
 
   for (int i = 0; i < nintvarsl; i++) {
-     if (interval_llimit_cv[i]>=num_variables() || interval_llimit_cv[i]<0) {
+     if (interval_llimit_cv[i]>=nvars || interval_llimit_cv[i]<0) {
        cvm::error("Error: CV number is negative or >= num_variables  \n", COLVARS_INPUT_ERROR);
        return COLVARS_INPUT_ERROR;
      }
@@ -659,7 +660,7 @@ int colvarbias_meta::init_interval_params(std::string const &conf)
   }
 
   for (int i = 0; i < nintvarsu; i++) {
-     if (interval_ulimit_cv[i]>=num_variables() || interval_ulimit_cv[i]<0) {
+     if (interval_ulimit_cv[i]>=nvars || interval_ulimit_cv[i]<0) {
        cvm::error("Error: CV number is negative or >= num_variables  \n", COLVARS_INPUT_ERROR);
        return COLVARS_INPUT_ERROR;
      }
@@ -783,7 +784,7 @@ int colvarbias_meta::reflect_hill_multid(cvm::real const &h_scale)
      for (size_t i = 0; i < j; i++) {
         startsum*=10;
      }
-     for (int jj = 0; jj < ref_state[j].size(); jj++) {
+     for (size_t jj = 0; jj < ref_state[j].size(); jj++) {
            int getsum=startsum;
            int check_val=ref_state[j][jj];
            int numberref=0;
