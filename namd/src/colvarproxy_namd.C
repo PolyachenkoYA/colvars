@@ -297,6 +297,8 @@ int colvarproxy_namd::setup()
   // redefining the timestep
   set_integration_timestep(simparams->dt);
 
+  frequency = simparams->globalMasterFrequency;
+
   return error_code;
 }
 
@@ -350,11 +352,15 @@ void colvarproxy_namd::calculate()
 
   } else {
 
-    // Use the time step number inherited from GlobalMaster
-    if ((step - previous_NAMD_step) == 1) {
-      colvars->increment_step_number();
+    // Check the time step number in the GlobalMaster object
+    auto const step_increment = step - previous_NAMD_step;
+
+    if (step_increment == static_cast<cvm::step_number>(frequency)) {
+
+      colvars->increment_step_number(frequency);
       b_simulation_continuing = false;
-    } else {
+
+    } else if (step_increment == 0L) {
 
       // Cases covered by this condition:
       // - run 0
@@ -369,6 +375,11 @@ void colvarproxy_namd::calculate()
       colvarproxy_io::set_default_restart_frequency(simparams->restartFrequency);
       colvars->setup_output();
 
+    } else {
+
+      cvm::error("Error: increment between to MD steps (" + cvm::to_str(step_increment) +
+                 ") does not equal globalMasterFrequency or zero.\n",
+                 COLVARS_BUG_ERROR);
     }
   }
 

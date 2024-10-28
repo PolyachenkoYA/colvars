@@ -49,8 +49,14 @@ protected:
   /// NAMD-style PRNG object
   Random random;
 
+  /// Value of SimParameters::globalMasterFrequency
+  int frequency = 1;
+
+  /// True until the second call to calculate(), then false
   bool first_timestep;
-  cvm::step_number previous_NAMD_step;
+
+  /// Record the previous value of GlobalMaster::step
+  cvm::step_number previous_NAMD_step = -1;
 
   /// Used to submit restraint energy as MISC
   SubmitReduction *reduction;
