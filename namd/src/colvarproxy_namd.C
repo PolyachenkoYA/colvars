@@ -351,8 +351,8 @@ void colvarproxy_namd::calculate()
   } else {
 
     // Use the time step number inherited from GlobalMaster
-    if ( step - previous_NAMD_step == 1 ) {
-      colvars->it++;
+    if ((step - previous_NAMD_step) == 1) {
+      colvars->increment_step_number();
       b_simulation_continuing = false;
     } else {
 

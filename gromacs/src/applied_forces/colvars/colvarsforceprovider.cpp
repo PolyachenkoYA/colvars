@@ -347,7 +347,7 @@ void ColvarsForceProvider::calculateForces(const ForceProviderInput& forceProvid
     const rvec* xPointer = &(x.data()->as_vec());
     const auto& box      = forceProviderInput.box_;
 
-    colvars->it = forceProviderInput.step_;
+    colvars->set_step_number(forceProviderInput.step_);
 
 
     // Eventually there needs to be an interface to update local data upon neighbor search

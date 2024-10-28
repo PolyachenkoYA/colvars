@@ -229,6 +229,20 @@ public:
   /// Starting step number for this run
   static step_number it_restart;
 
+  /// Set the current number of a simulation
+  /// \param it_new New step number; the caller must provide a continuously increasing number when restarting
+  inline void set_step_number(step_number it_new)
+  {
+    it = it_new;
+  }
+
+  /// Increment the current number of a simulation; use this if the MD engine resets the timestep to 0 when restarting
+  /// \param increment How many steps to increment (default 1)
+  inline void increment_step_number(step_number increment = 1L)
+  {
+    it += increment;
+  }
+
   /// Return the current step number from the beginning of this run
   static inline step_number step_relative()
   {
