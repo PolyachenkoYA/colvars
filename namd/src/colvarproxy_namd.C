@@ -297,7 +297,7 @@ int colvarproxy_namd::setup()
   // redefining the timestep
   set_integration_timestep(simparams->dt);
 
-  frequency = simparams->globalMasterFrequency;
+  set_simulation_frequency(simparams->globalMasterFrequency);
 
   return error_code;
 }
@@ -355,9 +355,9 @@ void colvarproxy_namd::calculate()
     // Check the time step number in the GlobalMaster object
     auto const step_increment = step - previous_NAMD_step;
 
-    if (step_increment == static_cast<cvm::step_number>(frequency)) {
+    if (step_increment == static_cast<cvm::step_number>(simulation_frequency())) {
 
-      colvars->increment_step_number(frequency);
+      colvars->increment_step_number(simulation_frequency());
       b_simulation_continuing = false;
 
     } else if (step_increment == 0L) {

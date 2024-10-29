@@ -114,8 +114,8 @@ double colvarproxy_lammps::compute()
     first_timestep = false;
   } else {
     // Use the time step number from LAMMPS Update object
-    if (_lmp->update->ntimestep - previous_step == 1) {
-      colvars->increment_step_number();
+    if (_lmp->update->ntimestep - previous_step == simulation_frequency()) {
+      colvars->increment_step_number(simulation_frequency());
       b_simulation_continuing = false;
     } else {
       // Cases covered by this condition:

@@ -646,6 +646,15 @@ public:
     return b_simulation_continuing;
   }
 
+  /// Number of simulation steps between which Colvars is being invoked (default: 1)
+  inline int simulation_frequency() const
+  {
+    return simulation_frequency_;
+  }
+
+  /// Set the number of simulation steps between which Colvars is being invoked
+  int set_simulation_frequency(int freq);
+
   /// Called at the end of a simulation segment (i.e. "run" command)
   int post_run();
 
@@ -679,6 +688,9 @@ protected:
   /// This is set to true when the step 0 of a new "run" command is being
   /// executed, regardless of whether a state file has been loaded.
   bool b_simulation_continuing;
+
+  /// Number of simulation steps between which Colvars is being invoked (default: 1)
+  int simulation_frequency_ = 1;
 
   /// Whether the entire module should be deallocated by the host engine
   bool b_delete_requested;

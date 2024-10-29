@@ -569,6 +569,13 @@ int colvarproxy::update_output()
 }
 
 
+int colvarproxy::set_simulation_frequency(int freq)
+{
+  simulation_frequency_ = freq;
+  return COLVARS_OK;
+}
+
+
 int colvarproxy::end_of_step()
 {
   // Disable flags that Colvars doesn't need any more

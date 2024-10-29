@@ -49,9 +49,6 @@ protected:
   /// NAMD-style PRNG object
   Random random;
 
-  /// Value of SimParameters::globalMasterFrequency
-  int frequency = 1;
-
   /// True until the second call to calculate(), then false
   bool first_timestep;
 
