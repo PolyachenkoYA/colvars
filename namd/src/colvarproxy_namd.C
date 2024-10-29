@@ -353,7 +353,7 @@ void colvarproxy_namd::calculate()
   } else {
 
     // Check the time step number in the GlobalMaster object
-    auto const step_increment = step - previous_NAMD_step;
+    auto const step_increment = (step - previous_NAMD_step) * simulation_frequency();
 
     if (step_increment == static_cast<cvm::step_number>(simulation_frequency())) {
 
