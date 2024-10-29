@@ -1,0 +1,17 @@
+# -*- tcl -*-
+
+# Note: see also test.restart.namd, test.legacy.namd, test.restart.legacy.namd
+
+source ../Common/common.namd
+source ../Common/measure_net_force_torque.tcl
+
+colvars                 on
+
+# TODO make this script exit without an error for non-GPU CI builds
+GPUResident on
+globalMasterFrequency   4
+
+cv configfile test.in
+run ${numsteps}
+
+source ../Common/delete_tmp_files.tcl
