@@ -78,6 +78,19 @@ EOF
         cmd+=(--charm-arch netlrts-linux-x86_64)
     fi
 
+    if [ "${label}" = "cuda" ] ; then
+        if [ -z "${CUDA_HOME}" ] ; then
+            CUDA_HOME=$(which nvcc)
+            export CUDA_HOME=${CUDA_HOME%/bin/nvcc}
+        fi
+        if [ -z "${CUDA_HOME}" ] ; then
+            echo "Error: Missing CUDA." >& 2
+            return 1
+        fi
+        cmd+=(--with-cuda --cuda-prefix ${CUDA_HOME})
+        cmd+=(--with-single-node-cuda)
+    fi
+
     if [ -z "${TCL_HOME}" ] ; then
         if [ -f /usr/local/include/tcl.h ] ; then
             export TCL_HOME=/usr/local
